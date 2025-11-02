@@ -10,6 +10,7 @@ import { AdminLayout } from './layouts/AdminLayout';
 
 // Common components
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import { ToasterProvider } from './components/ui/toaster';
 
 // Pages - Public
 import { HomePage } from './pages/HomePage';
@@ -299,7 +300,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppRoutes />
+        <ToasterProvider>
+          <AppRoutes />
+        </ToasterProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
