@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import api, { type ApiResponse, type AuthResponse } from '@/services/api';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useToast } from '@/hooks/useToast';
-import { Mail, Lock, LogIn, Eye, EyeOff, AlertCircle, Briefcase } from 'lucide-react';
+import { Mail, Lock, LogIn, Eye, EyeOff, AlertCircle, Briefcase, TrendingUp, Users, Target, Zap } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
@@ -81,7 +81,80 @@ export function LoginPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative w-full max-w-md">
+      <div className="container max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center w-full relative z-10">
+        {/* Left Side - Feature Showcase */}
+        <div className="hidden lg:block space-y-8 animate-in fade-in slide-in-from-left duration-700">
+          <div className="space-y-4">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Kết nối tài năng với cơ hội
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Nền tảng tuyển dụng hàng đầu Việt Nam
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl border border-primary/20 backdrop-blur-sm">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">10K+ Việc làm</h3>
+              <p className="text-sm text-muted-foreground">
+                Hàng nghìn cơ hội việc làm hấp dẫn
+              </p>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-primary/20 backdrop-blur-sm">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">5K+ Công ty</h3>
+              <p className="text-sm text-muted-foreground">
+                Đối tác uy tín trong mọi lĩnh vực
+              </p>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-indigo-500/10 to-blue-500/10 rounded-2xl border border-primary/20 backdrop-blur-sm">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Tỷ lệ khớp cao</h3>
+              <p className="text-sm text-muted-foreground">
+                AI matching thông minh
+              </p>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-2xl border border-primary/20 backdrop-blur-sm">
+              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Ứng tuyển nhanh</h3>
+              <p className="text-sm text-muted-foreground">
+                Nộp CV chỉ trong 1 click
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-border/50">
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 border-2 border-white dark:border-gray-900" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-white dark:border-gray-900" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 border-2 border-white dark:border-gray-900" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 border-2 border-white dark:border-gray-900 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">+2K</span>
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold">Hơn 2,000+ người đang tìm việc</p>
+                <p className="text-sm text-muted-foreground">Tham gia ngay hôm nay!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Login Form */}
+        <div className="w-full max-w-md mx-auto">
         {/* Logo/Brand Section */}
         <div className="text-center mb-8 animate-in fade-in slide-in-from-top duration-700">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-lg mb-4 transform hover:scale-105 transition-transform">
@@ -224,9 +297,10 @@ export function LoginPage() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-center mt-6 text-sm text-muted-foreground animate-in fade-in duration-1000">
-          <p>© 2025 Recruit System. All rights reserved.</p>
+          {/* Footer */}
+          <div className="text-center mt-6 text-sm text-muted-foreground animate-in fade-in duration-1000">
+            <p>© 2025 Recruit System. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </div>
