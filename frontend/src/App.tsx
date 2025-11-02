@@ -19,6 +19,7 @@ import { VerifyEmailPage } from './pages/VerifyEmailPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { SearchJobsPage } from './pages/SearchJobsPage';
 
 // Pages - Applicant
 import { ApplicantDashboard } from './pages/ApplicantDashboard';
@@ -58,7 +59,7 @@ function AppRoutes() {
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/jobs" element={<PlaceholderPage title="Danh sách việc làm" />} />
+      <Route path="/jobs" element={<SearchJobsPage />} />
       <Route path="/jobs/:id" element={<PlaceholderPage title="Chi tiết việc làm" />} />
       <Route path="/companies" element={<PlaceholderPage title="Danh sách công ty" />} />
       <Route path="/companies/:id" element={<PlaceholderPage title="Chi tiết công ty" />} />

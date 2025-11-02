@@ -155,6 +155,9 @@ api.interceptors.response.use(
 // Types cho Job và Company
 export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP' | 'FREELANCE';
 export type JobStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'CLOSED' | 'EXPIRED';
+export type ExperienceLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD';
+export type WorkMode = 'REMOTE' | 'ONSITE' | 'HYBRID';
+export type CompanySize = 'STARTUP' | 'SMALL' | 'MEDIUM' | 'LARGE' | 'ENTERPRISE';
 
 export interface CompanyResponse {
   id: number;
@@ -247,6 +250,12 @@ export const jobService = {
       location?: string;
       jobType?: JobType;
       minSalary?: number;
+      salaryRange?: string;
+      experienceLevel?: ExperienceLevel;
+      companySize?: CompanySize;
+      postedWithin?: number;
+      workMode?: WorkMode;
+      benefits?: string;
       page?: number;
       size?: number;
       sortBy?: string;
@@ -258,6 +267,12 @@ export const jobService = {
     if (params.location) queryParams.append('location', params.location);
     if (params.jobType) queryParams.append('jobType', params.jobType);
     if (params.minSalary) queryParams.append('minSalary', params.minSalary.toString());
+    if (params.salaryRange) queryParams.append('salaryRange', params.salaryRange);
+    if (params.experienceLevel) queryParams.append('experienceLevel', params.experienceLevel);
+    if (params.companySize) queryParams.append('companySize', params.companySize);
+    if (params.postedWithin) queryParams.append('postedWithin', params.postedWithin.toString());
+    if (params.workMode) queryParams.append('workMode', params.workMode);
+    if (params.benefits) queryParams.append('benefits', params.benefits);
     queryParams.append('page', (params.page ?? 0).toString());
     queryParams.append('size', (params.size ?? 10).toString());
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
