@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 // Layouts
-import { PublicLayout } from './layouts/PublicLayout';
 import { ApplicantLayout } from './layouts/ApplicantLayout';
 import { EmployerLayout } from './layouts/EmployerLayout';
 import { AdminLayout } from './layouts/AdminLayout';
@@ -17,6 +16,8 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 
 // Pages - Applicant
@@ -55,6 +56,8 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/jobs" element={<PlaceholderPage title="Danh sách việc làm" />} />
       <Route path="/jobs/:id" element={<PlaceholderPage title="Chi tiết việc làm" />} />
       <Route path="/companies" element={<PlaceholderPage title="Danh sách công ty" />} />
