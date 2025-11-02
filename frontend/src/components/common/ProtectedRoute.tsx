@@ -16,7 +16,9 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   }, [initAuth]);
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // Lưu URL hiện tại để redirect sau khi đăng nhập
+    const currentPath = location.pathname + location.search;
+    return <Navigate to={`/login?redirect=${encodeURIComponent(currentPath)}`} replace />;
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {

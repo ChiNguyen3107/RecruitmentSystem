@@ -24,6 +24,9 @@ export function LoginPage() {
   const { setAuth } = useAuthStore();
   const { toast } = useToast();
 
+  // Get redirect path from location state or URL params
+  const redirectTo = new URLSearchParams(window.location.search).get('redirect') || null;
+
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -51,14 +54,20 @@ export function LoginPage() {
         // Hiển thị thông báo thành công
         toast.success(`Chào mừng trở lại, ${user.fullName}!`, 'Đăng nhập thành công');
         
-        // Redirect dựa trên role
+        // Redirect logic: ưu tiên redirect URL, sau đó theo role
         setTimeout(() => {
-          if (user.role === 'ADMIN') {
-            navigate('/admin/dashboard');
+          if (redirectTo && redirectTo.startsWith('/')) {
+            // Redirect đến URL được chỉ định (nếu có)
+            navigate(redirectTo, { replace: true });
+          } else if (user.role === 'ADMIN') {
+            navigate('/admin/dashboard', { replace: true });
           } else if (user.role === 'EMPLOYER') {
-            navigate('/employer/dashboard');
+            navigate('/employer/dashboard', { replace: true });
+          } else if (user.role === 'APPLICANT') {
+            // Ứng viên chuyển đến trang chủ trước
+            navigate('/', { replace: true });
           } else {
-            navigate('/applicant/dashboard');
+            navigate('/', { replace: true });
           }
         }, 500);
       } else {

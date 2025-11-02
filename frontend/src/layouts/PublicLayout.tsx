@@ -1,61 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/store/useAuthStore';
+import { Header } from '@/components/common/Header';
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
-  const { user, isAuthenticated, logout } = useAuthStore();
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="border-b bg-background">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-primary">
-            Tuyển Dụng System
-          </Link>
-          
-          <nav className="flex items-center gap-4">
-            <Link to="/jobs" className="hover:text-primary">
-              Việc làm
-            </Link>
-            <Link to="/companies" className="hover:text-primary">
-              Công ty
-            </Link>
-            
-            {isAuthenticated ? (
-              <>
-                {user?.role === 'APPLICANT' && (
-                  <Link to="/applicant/dashboard">
-                    <Button variant="ghost">Ứng viên</Button>
-                  </Link>
-                )}
-                {user?.role === 'EMPLOYER' && (
-                  <Link to="/employer/dashboard">
-                    <Button variant="ghost">Nhà tuyển dụng</Button>
-                  </Link>
-                )}
-                {user?.role === 'ADMIN' && (
-                  <Link to="/admin/dashboard">
-                    <Button variant="ghost">Quản trị viên</Button>
-                  </Link>
-                )}
-                <Button onClick={logout} variant="ghost">
-                  Đăng xuất
-                </Button>
-              </>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost">Đăng nhập</Button>
-                </Link>
-                <Link to="/register">
-                  <Button>Đăng ký</Button>
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1">

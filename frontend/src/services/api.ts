@@ -286,6 +286,116 @@ export const jobService = {
     }
     throw new Error(response.data.message || 'Không thể tìm kiếm việc làm');
   },
+
+  // Lấy chi tiết việc làm
+  getJobDetail: async (id: number): Promise<JobPostingResponse> => {
+    const response = await api.get<ApiResponse<JobPostingResponse>>(
+      `/public/jobs/${id}`
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Không thể lấy chi tiết việc làm');
+  },
+
+  // Lấy danh sách việc làm tương tự
+  getSimilarJobs: async (
+    relatedTo: number,
+    currentJob?: JobPostingResponse,
+    limit: number = 6
+  ): Promise<JobPostingResponse[]> => {
+    try {
+      const response = await api.get<ApiResponse<PageResponse<JobPostingResponse>>>(
+        `/public/jobs/latest?page=0&size=${limit * 3}`
+      );
+      if (response.data.success && response.data.data) {
+        // Lọc bỏ job hiện tại
+        let jobs = response.data.data.content.filter(
+          job => job.id !== relatedTo
+        );
+        
+        // Nếu có thông tin currentJob, ưu tiên job cùng company hoặc cùng jobType
+        if (currentJob) {
+          const sameCompany = jobs.filter(
+            job => job.company?.id === currentJob.company?.id
+          );
+          const sameJobType = jobs.filter(
+            job => job.jobType === currentJob.jobType && job.company?.id !== currentJob.company?.id
+          );
+          const others = jobs.filter(
+            job => job.company?.id !== currentJob.company?.id && job.jobType !== currentJob.jobType
+          );
+          jobs = [...sameCompany, ...sameJobType, ...others];
+        }
+        
+        return jobs.slice(0, limit);
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  },
+};
+
+export interface ApplicationRequest {
+  jobPostingId: number;
+  coverLetter?: string;
+  resumeUrl?: string;
+  additionalDocuments?: string[];
+}
+
+export interface ApplicationResponse {
+  id: number;
+  jobPostingId: number;
+  applicantId: number;
+  coverLetter?: string;
+  resumeUrl?: string;
+  status?: string;
+  appliedAt?: string;
+}
+
+export interface SavedJobActionResponse {
+  jobId: number;
+  action: 'SAVED' | 'UNSAVED';
+  savedAt?: string;
+}
+
+export const applicationService = {
+  // Nộp đơn ứng tuyển
+  applyJob: async (request: ApplicationRequest): Promise<ApplicationResponse> => {
+    const response = await api.post<ApiResponse<ApplicationResponse>>(
+      '/applications/my',
+      request
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Không thể nộp đơn ứng tuyển');
+  },
+};
+
+export const savedJobService = {
+  // Lưu việc làm
+  saveJob: async (jobId: number): Promise<SavedJobActionResponse> => {
+    const response = await api.post<ApiResponse<SavedJobActionResponse>>(
+      `/jobs/${jobId}/save`
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Không thể lưu việc làm');
+  },
+
+  // Bỏ lưu việc làm
+  unsaveJob: async (jobId: number): Promise<SavedJobActionResponse> => {
+    const response = await api.delete<ApiResponse<SavedJobActionResponse>>(
+      `/jobs/${jobId}/unsave`
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Không thể bỏ lưu việc làm');
+  },
 };
 
 export const companyService = {

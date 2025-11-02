@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -61,6 +61,7 @@ export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
   const { setAuth } = useAuthStore();
   const { toast } = useToast();
 
@@ -107,6 +108,20 @@ export function RegisterPage() {
           'Kiểm tra email để xác minh tài khoản của bạn.', 
           'Đăng ký thành công!'
         );
+
+        // Redirect dựa trên role sau khi đăng ký
+        setTimeout(() => {
+          if (user.role === 'ADMIN') {
+            navigate('/admin/dashboard', { replace: true });
+          } else if (user.role === 'EMPLOYER') {
+            navigate('/employer/dashboard', { replace: true });
+          } else if (user.role === 'APPLICANT') {
+            // Ứng viên chuyển đến trang chủ trước
+            navigate('/', { replace: true });
+          } else {
+            navigate('/', { replace: true });
+          }
+        }, 1500);
 
         // Reset form
         reset({
