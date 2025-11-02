@@ -9,7 +9,6 @@ import { AdminLayout } from './layouts/AdminLayout';
 
 // Common components
 import { ProtectedRoute } from './components/common/ProtectedRoute';
-import { PublicRoute } from './components/common/PublicRoute';
 import { ToasterProvider } from './components/ui/toaster';
 
 // Pages - Public
@@ -21,9 +20,8 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { SearchJobsPage } from './pages/SearchJobsPage';
-import { JobDetailPage } from './pages/JobDetailPage';
-import { CompaniesPage } from './pages/CompaniesPage';
-import { CompanyDetailPage } from './pages/CompanyDetailPage';
+import { AboutPage } from './pages/AboutPage';
+import { ContactPage } from './pages/ContactPage';
 
 // Pages - Applicant
 import { ApplicantDashboard } from './pages/ApplicantDashboard';
@@ -58,31 +56,17 @@ function AppRoutes() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
-      <Route 
-        path="/login" 
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        } 
-      />
-      <Route 
-        path="/register" 
-        element={
-          <PublicRoute>
-            <RegisterPage />
-          </PublicRoute>
-        } 
-      />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/jobs" element={<SearchJobsPage />} />
-      <Route path="/jobs/:id" element={<JobDetailPage />} />
-      <Route path="/companies" element={<CompaniesPage />} />
-      <Route path="/companies/:id" element={<CompanyDetailPage />} />
-      <Route path="/about" element={<PlaceholderPage title="Về chúng tôi" />} />
-      <Route path="/contact" element={<PlaceholderPage title="Liên hệ" />} />
+      <Route path="/jobs/:id" element={<PlaceholderPage title="Chi tiết việc làm" />} />
+      <Route path="/companies" element={<PlaceholderPage title="Danh sách công ty" />} />
+      <Route path="/companies/:id" element={<PlaceholderPage title="Chi tiết công ty" />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
 
       {/* Applicant Routes */}
       <Route

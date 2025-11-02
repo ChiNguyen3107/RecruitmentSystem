@@ -79,6 +79,28 @@ export function Header() {
             >
               Công ty
             </Link>
+            <Link
+              to="/about"
+              className={cn(
+                'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                isActive('/about')
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+              )}
+            >
+              Giới thiệu
+            </Link>
+            <Link
+              to="/contact"
+              className={cn(
+                'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                isActive('/contact')
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+              )}
+            >
+              Liên hệ
+            </Link>
           </nav>
 
           {/* Right Section */}
@@ -280,6 +302,30 @@ export function Header() {
                 )}
               >
                 Công ty
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                  isActive('/about')
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                )}
+              >
+                Giới thiệu
+              </Link>
+              <Link
+                to="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                  isActive('/contact')
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                )}
+              >
+                Liên hệ
               </Link>
               {!isAuthenticated && (
                 <>
