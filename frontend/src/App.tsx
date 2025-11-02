@@ -22,6 +22,8 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { SearchJobsPage } from './pages/SearchJobsPage';
 import { JobDetailPage } from './pages/JobDetailPage';
+import { CompaniesPage } from './pages/CompaniesPage';
+import { CompanyDetailPage } from './pages/CompanyDetailPage';
 
 // Pages - Applicant
 import { ApplicantDashboard } from './pages/ApplicantDashboard';
@@ -77,8 +79,8 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/jobs" element={<SearchJobsPage />} />
       <Route path="/jobs/:id" element={<JobDetailPage />} />
-      <Route path="/companies" element={<PlaceholderPage title="Danh sách công ty" />} />
-      <Route path="/companies/:id" element={<PlaceholderPage title="Chi tiết công ty" />} />
+      <Route path="/companies" element={<CompaniesPage />} />
+      <Route path="/companies/:id" element={<CompanyDetailPage />} />
       <Route path="/about" element={<PlaceholderPage title="Về chúng tôi" />} />
       <Route path="/contact" element={<PlaceholderPage title="Liên hệ" />} />
 

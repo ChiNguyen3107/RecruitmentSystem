@@ -399,8 +399,59 @@ export const savedJobService = {
 };
 
 export const companyService = {
-  // Lấy danh sách công ty (có thể filter featured nếu backend hỗ trợ)
-  // Nếu không có endpoint featured, sẽ lấy danh sách rỗng (không throw error)
+  // Tìm kiếm danh sách công ty với filter
+  searchCompanies: async (params?: {
+    keyword?: string;
+    industry?: string;
+    city?: string;
+    companySize?: string;
+    isVerified?: boolean;
+    page?: number;
+    size?: number;
+  }): Promise<PageResponse<CompanyResponse>> => {
+    const queryParams = new URLSearchParams();
+    if (params?.keyword) queryParams.append('keyword', params.keyword);
+    if (params?.industry) queryParams.append('industry', params.industry);
+    if (params?.city) queryParams.append('city', params.city);
+    if (params?.companySize) queryParams.append('companySize', params.companySize);
+    if (params?.isVerified !== undefined) queryParams.append('isVerified', params.isVerified.toString());
+    queryParams.append('page', (params?.page ?? 0).toString());
+    queryParams.append('size', (params?.size ?? 12).toString());
+
+    const response = await api.get<ApiResponse<PageResponse<CompanyResponse>>>(
+      `/companies?${queryParams.toString()}`
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Không thể lấy danh sách công ty');
+  },
+
+  // Lấy chi tiết công ty công khai
+  getCompanyDetail: async (id: number): Promise<{ company: CompanyResponse; jobs: JobPostingResponse[] }> => {
+    const response = await api.get<{ company: CompanyResponse; jobs: JobPostingResponse[] }>(
+      `/companies/${id}/public`
+    );
+    // Backend trả về trực tiếp object, không wrap trong ApiResponse
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error('Không thể lấy chi tiết công ty');
+  },
+
+  // Lấy danh sách việc làm của công ty
+  getCompanyJobs: async (id: number, page: number = 0, size: number = 20): Promise<PageResponse<JobPostingResponse>> => {
+    const response = await api.get<PageResponse<JobPostingResponse>>(
+      `/companies/${id}/jobs?page=${page}&size=${size}`
+    );
+    // Backend trả về trực tiếp PageResponse, không wrap trong ApiResponse
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error('Không thể lấy danh sách việc làm của công ty');
+  },
+
+  // Lấy danh sách công ty (deprecated - dùng searchCompanies thay thế)
   getCompanies: async (params?: {
     featured?: boolean;
     page?: number;
