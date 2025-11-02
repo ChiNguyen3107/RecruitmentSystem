@@ -16,6 +16,7 @@ import { ToasterProvider } from './components/ui/toaster';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { VerifyEmailPage } from './pages/VerifyEmailPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 
 // Pages - Applicant
@@ -53,6 +54,7 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/jobs" element={<PlaceholderPage title="Danh sách việc làm" />} />
       <Route path="/jobs/:id" element={<PlaceholderPage title="Chi tiết việc làm" />} />
       <Route path="/companies" element={<PlaceholderPage title="Danh sách công ty" />} />
