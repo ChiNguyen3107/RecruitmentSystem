@@ -1,7 +1,5 @@
-import { LucideIcon } from 'lucide-react';
-
 interface EmptyStateProps {
-  icon: LucideIcon;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description?: string;
   action?: React.ReactNode;

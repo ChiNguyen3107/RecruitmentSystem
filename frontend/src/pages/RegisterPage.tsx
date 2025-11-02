@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -24,12 +24,29 @@ import {
 } from 'lucide-react';
 
 const registerSchema = z.object({
-  email: z.string().email('Email không hợp lệ'),
-  password: z.string().min(6, 'Mật khẩu tối thiểu 6 ký tự').max(50, 'Mật khẩu tối đa 50 ký tự'),
+  email: z
+    .string()
+    .min(1, 'Email không được để trống')
+    .email('Email không hợp lệ')
+    .max(100, 'Email không được quá 100 ký tự'),
+  password: z
+    .string()
+    .min(1, 'Mật khẩu không được để trống')
+    .min(6, 'Mật khẩu tối thiểu 6 ký tự')
+    .max(50, 'Mật khẩu tối đa 50 ký tự'),
   confirmPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu'),
-  firstName: z.string().min(1, 'Họ không được để trống').max(50, 'Họ không được quá 50 ký tự'),
-  lastName: z.string().min(1, 'Tên không được để trống').max(50, 'Tên không được quá 50 ký tự'),
-  phoneNumber: z.string().max(15, 'Số điện thoại không được quá 15 ký tự').optional().or(z.literal('')),
+  fullName: z
+    .string()
+    .min(1, 'Họ tên không được để trống')
+    .min(2, 'Họ tên tối thiểu 2 ký tự')
+    .max(100, 'Họ tên không được quá 100 ký tự')
+    .regex(/^[\p{L}\s]+$/u, 'Họ tên chỉ được chứa chữ cái và khoảng trắng'),
+  phone: z
+    .string()
+    .max(15, 'Số điện thoại không được quá 15 ký tự')
+    .regex(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/, 'Số điện thoại không hợp lệ')
+    .optional()
+    .or(z.literal('')),
   role: z.enum(['APPLICANT', 'EMPLOYER'], {
     required_error: 'Vui lòng chọn vai trò',
   }),
@@ -44,7 +61,6 @@ export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
   const { setAuth } = useAuthStore();
   const { toast } = useToast();
 
@@ -52,6 +68,11 @@ export function RegisterPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       role: 'APPLICANT',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      fullName: '',
+      phone: '',
     },
   });
 
@@ -61,8 +82,21 @@ export function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const { confirmPassword, ...registerData } = data;
-      const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', registerData);
+      // Tách fullName thành firstName và lastName
+      const nameParts = data.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
+
+      // Chuẩn bị dữ liệu gửi lên API
+      const { confirmPassword, fullName, phone, ...registerData } = data;
+      const payload = {
+        ...registerData,
+        firstName,
+        lastName,
+        phoneNumber: phone || undefined,
+      };
+
+      const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', payload);
       
       if (response.data.success && response.data.data) {
         const { user, accessToken, refreshToken } = response.data.data;
@@ -75,21 +109,19 @@ export function RegisterPage() {
         );
 
         // Reset form
-        reset();
-        
-        // Redirect based on role
-        setTimeout(() => {
-          if (user.role === 'EMPLOYER') {
-            navigate('/employer/dashboard');
-          } else {
-            navigate('/applicant/dashboard');
-          }
-        }, 500);
+        reset({
+          role: 'APPLICANT',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          fullName: '',
+          phone: '',
+        });
       } else {
         toast.error(response.data.message || 'Đăng ký thất bại', 'Lỗi đăng ký');
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Đăng ký thất bại';
+      const errorMessage = err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
       toast.error(errorMessage, 'Lỗi đăng ký');
     } finally {
       setIsLoading(false);
@@ -251,57 +283,30 @@ export function RegisterPage() {
                 </div>
               </div>
 
-              {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="firstName" className="block text-sm font-semibold text-foreground">
-                    Họ
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
-                      <User className="w-5 h-5" />
-                    </div>
-                    <input
-                      id="firstName"
-                      type="text"
-                      {...register('firstName')}
-                      className="w-full pl-11 pr-4 py-3 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background transition-all"
-                      placeholder="Họ"
-                      disabled={isLoading}
-                    />
+              {/* Full Name Field */}
+              <div className="space-y-2">
+                <label htmlFor="fullName" className="block text-sm font-semibold text-foreground">
+                  Họ tên
+                </label>
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                    <User className="w-5 h-5" />
                   </div>
-                  {errors.firstName && (
-                    <p className="text-destructive text-sm flex items-center gap-1">
-                      <AlertCircle className="w-4 h-4" />
-                      {errors.firstName.message}
-                    </p>
-                  )}
+                  <input
+                    id="fullName"
+                    type="text"
+                    {...register('fullName')}
+                    className="w-full pl-11 pr-4 py-3 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background transition-all"
+                    placeholder="Nhập họ và tên đầy đủ"
+                    disabled={isLoading}
+                  />
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="lastName" className="block text-sm font-semibold text-foreground">
-                    Tên
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
-                      <User className="w-5 h-5" />
-                    </div>
-                    <input
-                      id="lastName"
-                      type="text"
-                      {...register('lastName')}
-                      className="w-full pl-11 pr-4 py-3 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background transition-all"
-                      placeholder="Tên"
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {errors.lastName && (
-                    <p className="text-destructive text-sm flex items-center gap-1">
-                      <AlertCircle className="w-4 h-4" />
-                      {errors.lastName.message}
-                    </p>
-                  )}
-                </div>
+                {errors.fullName && (
+                  <p className="text-destructive text-sm flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.fullName.message}
+                  </p>
+                )}
               </div>
 
               {/* Email Field */}
@@ -398,9 +403,9 @@ export function RegisterPage() {
                 )}
               </div>
 
-              {/* Phone Number Field */}
+              {/* Phone Field */}
               <div className="space-y-2">
-                <label htmlFor="phoneNumber" className="block text-sm font-semibold text-foreground">
+                <label htmlFor="phone" className="block text-sm font-semibold text-foreground">
                   Số điện thoại <span className="text-muted-foreground font-normal">(tùy chọn)</span>
                 </label>
                 <div className="relative group">
@@ -408,18 +413,18 @@ export function RegisterPage() {
                     <Phone className="w-5 h-5" />
                   </div>
                   <input
-                    id="phoneNumber"
+                    id="phone"
                     type="tel"
-                    {...register('phoneNumber')}
+                    {...register('phone')}
                     className="w-full pl-11 pr-4 py-3 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background transition-all"
-                    placeholder="+84..."
+                    placeholder="+84 912 345 678"
                     disabled={isLoading}
                   />
                 </div>
-                {errors.phoneNumber && (
+                {errors.phone && (
                   <p className="text-destructive text-sm flex items-center gap-1">
                     <AlertCircle className="w-4 h-4" />
-                    {errors.phoneNumber.message}
+                    {errors.phone.message}
                   </p>
                 )}
               </div>
