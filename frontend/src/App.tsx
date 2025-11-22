@@ -28,6 +28,7 @@ import { ContactPage } from './pages/ContactPage';
 
 // Pages - Applicant
 import { ApplicantDashboard } from './pages/ApplicantDashboard';
+import { ApplicantProfilePage } from './pages/applicant/ApplicantProfilePage';
 
 // Pages - Employer
 import { EmployerDashboard } from './pages/EmployerDashboard';
@@ -84,9 +85,7 @@ function AppRoutes() {
         path="/applicant/profile"
         element={
           <ProtectedRoute allowedRoles={['APPLICANT']}>
-            <ApplicantLayout>
-              <PlaceholderPage title="Hồ sơ của tôi" />
-            </ApplicantLayout>
+            <ApplicantProfilePage />
           </ProtectedRoute>
         }
       />
