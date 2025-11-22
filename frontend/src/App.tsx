@@ -29,6 +29,8 @@ import { ContactPage } from './pages/ContactPage';
 // Pages - Applicant
 import { ApplicantDashboard } from './pages/ApplicantDashboard';
 import { ApplicantProfilePage } from './pages/applicant/ApplicantProfilePage';
+import { ApplicantApplicationsPage } from './pages/applicant/ApplicantApplicationsPage';
+import { ApplicationDetailPage } from './pages/applicant/ApplicationDetailPage';
 
 // Pages - Employer
 import { EmployerDashboard } from './pages/EmployerDashboard';
@@ -93,9 +95,7 @@ function AppRoutes() {
         path="/applicant/applications"
         element={
           <ProtectedRoute allowedRoles={['APPLICANT']}>
-            <ApplicantLayout>
-              <PlaceholderPage title="Đơn ứng tuyển của tôi" />
-            </ApplicantLayout>
+            <ApplicantApplicationsPage />
           </ProtectedRoute>
         }
       />
@@ -103,9 +103,7 @@ function AppRoutes() {
         path="/applicant/applications/:id"
         element={
           <ProtectedRoute allowedRoles={['APPLICANT']}>
-            <ApplicantLayout>
-              <PlaceholderPage title="Chi tiết đơn ứng tuyển" />
-            </ApplicantLayout>
+            <ApplicationDetailPage />
           </ProtectedRoute>
         }
       />
