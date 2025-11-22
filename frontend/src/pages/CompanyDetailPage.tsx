@@ -107,6 +107,21 @@ export function CompanyDetailPage() {
           Quay lại danh sách công ty
         </Button>
 
+        {/* Company Banner */}
+        {company.companyPhotos && company.companyPhotos.length > 0 && (
+          <div className="mb-6 rounded-lg overflow-hidden border">
+            <img
+              src={company.companyPhotos[0]}
+              alt={`${company.name} banner`}
+              className="w-full h-64 md:h-80 object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+
         {/* Company Header */}
         <div className="bg-card border rounded-lg p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row gap-6">

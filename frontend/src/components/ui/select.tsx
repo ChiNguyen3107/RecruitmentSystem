@@ -126,7 +126,7 @@ export const SelectContent: React.FC<SelectContentProps> = ({ children, classNam
     <div className="p-1 max-h-[300px] overflow-auto">
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { onChange, selectedValue: value, setLabel })
+          return React.cloneElement(child, { onChange, selectedValue: value, setLabel, setOpen })
         }
         return child
       })}
@@ -166,10 +166,11 @@ export interface SelectItemProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   selectedValue?: string
   onChange?: (value: string) => void
   setLabel?: (value: string, label: string) => void
+  setOpen?: (open: boolean) => void
 }
 
 export const SelectItem = React.forwardRef<HTMLButtonElement, SelectItemProps>(
-  ({ className, value, children, selectedValue, onChange, setLabel, ...props }, ref) => {
+  ({ className, value, children, selectedValue, onChange, setLabel, setOpen, ...props }, ref) => {
     const isSelected = selectedValue === value
     const textRef = React.useRef<HTMLSpanElement>(null)
 
@@ -182,8 +183,7 @@ export const SelectItem = React.forwardRef<HTMLButtonElement, SelectItemProps>(
 
     const handleClick = () => {
       onChange?.(value)
-      const context = React.useContext(SelectContext)
-      context?.setOpen(false)
+      setOpen?.(false)
     }
 
     return (
